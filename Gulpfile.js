@@ -21,7 +21,7 @@ var port = parsedUrl.port || 80;
 var paths = {
   scripts: 'js/**/*.coffee',
   images: 'images/**/*',
-  styles: 'sass/style.scss',
+  styles: 'sass/**/*',
   php: './**/*.php'
 };
 
@@ -44,33 +44,15 @@ gulp.task('styles', function () {
     .pipe(sass().on('error', sass.logError))
     .pipe(autoprefixer())
     .pipe(gulp.dest('./'))
-    .pipe(browserSync.stream());
 });
 
 
-gulp.task('serve', function() {
 
-  connect.server({
-    port: parseInt(port) + 1,
-    hostname: hostname,
-    base: '../../../', // default for a wordpress install
-    open: false
-  }, function() {
-    browserSync({
-      host: hostname,
-      proxy: host,
-      port: port
-    });
-  });
-});
-
-gulp.task('reload-scripts', ['scripts'], browserSync.reload);
 
 gulp.task('watch', function() {
   gulp.watch(paths.styles, ['styles']);
-  gulp.watch(paths.scripts, ['reload-scripts']);
-  gulp.watch(paths.php).on('change', browserSync.reload);
+  
 });
 
 // The default task (called when you run `gulp` from cli)
-gulp.task('default', ['serve', 'scripts', 'styles', 'serve', 'watch']);
+gulp.task('default', ['scripts', 'styles', 'watch']);
